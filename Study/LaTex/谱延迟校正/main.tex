@@ -1,0 +1,80 @@
+% !Mode:: "TeX:UTF-8"
+\documentclass[12pt,a4paper]{article}
+\input{en_preamble.tex}
+\input{xecjk_preamble.tex}
+
+\title{谱延迟校正}
+\author{作者：周铁军}
+\date{\chntoday}
+\begin{document}
+\maketitle
+\newpage
+
+\begin{equation}
+	q(s,r)=q(0,r)+\int_{0}^{s}[\nabla^2 q(\tau,r)-\omega(r)q(\tau,r)]d\tau
+\end{equation}
+
+构造如下迭代格式：
+\begin{equation}
+	q^{[1]}(s,r)=q(0,r)+\int_{0}^{s}[\nabla^2 q^{[0]}q(\tau,r)-w(r)q^{[0]}(\tau,r)]d\tau
+\end{equation}
+
+对s所在区间$[0,f]$作$n$次剖分，节点记为$s_i,i=0,1,...,n$
+
+易知，$q(s,r)=[q(s_0,r),q(s_1,r),...,q(s_n,r)]'$
+
+取变量$x \in {s_0,s_1,...,s_n}$
+
+我们可以得到$n+1$个式子
+\begin{equation}
+	q^{[1]}(x,r)=q(0,r)+\int_{0}^{x}[\nabla^2 q^{[0]}q(\tau,r)-w(r)q^{[0]}(\tau,r)]d\tau
+\end{equation}
+
+通过$\tau=\frac{x}{2}+\frac{x}{2} t$,$\tau \in (0,x)$映射到$t \in [-1,1]$
+
+于是得到
+\begin{equation}
+	q^{[1]}(x,r)=q(0,r)+\int_{-1}^{1}[\nabla^2 q^{[0]}q(\frac{x}{2}+\frac{x}{2} t,r)-w(r)q^{[0]}(\frac{x}{2}+\frac{x}{2} t,r)]\frac{x}{2}dt
+\end{equation}
+
+现在$t\in[-1,1]$,$s_j=-cos(\frac{j\pi}{n})$是$[-1,1]$上的节点。
+
+%%带边框 
+ 记：$$f(t,r)=[\nabla^2 q^{[0]}q(\frac{x}{2}+\frac{x}{2} t,r)-w(r)q^{[0]}(\frac{x}{2}+\frac{x}{2} t,r)]\frac{x}{2}$$
+ 现在要求$f(t,r)$的插值多项式，我们对r所在区间$[0,10]$作剖分，得$r_0,r_1,...,r_n$
+ 这样我们可得到一组关于$t$的一元函数$f(t,r_i),i=0,1,...,n$
+
+作$f(t,r_i)$的插值逼近
+\begin{equation}
+	p_{n}(t)=\frac{a_0}{2}+\sum_{k=1}^{n-1}a_k T_k(t)+\frac{a_n}{2}T_n(t)
+\end{equation}
+
+用$t=-cos\theta,\theta \in [0,\pi]$带入得到
+\begin{equation}
+	p_n(-cos\theta)=\frac{a_0}{2}+\sum_{k=1}^{n-1}a_k \cos k\theta+\frac{a_n}{2}\cos n\theta
+\end{equation}
+该式是对
+\begin{equation}
+	F(\theta,r_i)=[f(-cos\theta,r_i)=\nabla^2 q^{[0]}(\frac{x}{2}+\frac{x}{2} \cos \theta,r)-w(r)q^{[0]}(\frac{x}{2}+\frac{x}{2}\cos \theta ,r)]\frac{x}{2}
+\end{equation}
+的插值逼近
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\cite{tam19912d}
+\bibliography{ref}
+\end{document}

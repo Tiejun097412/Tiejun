@@ -1,0 +1,102 @@
+% !Mode:: "TeX:UTF-8"
+\documentclass[12pt,a4paper]{article}
+\input{en_preamble.tex}
+\input{xecjk_preamble.tex}
+
+\title{学习报告}
+\author{作者：周铁军}
+\date{\chntoday}
+\begin{document}
+\maketitle
+\newpage
+\section{显式欧拉法}
+欧拉法是常微分方程的数值解法的一种，其基本思想是迭代。其中分为前进的EULER法、后退的EULER法、改进的EULER法。所谓迭代，就是逐次替代，最后求出所要求的解，并达到一定的精度。
+
+{\bfseries 向前欧拉}形式如下：
+$$u_{n+1}=u_{n}+h f\left(u_{n}, t_{n}\right)$$
+$\text{初始条件：}u(t_0)=u_0$
+
+{\bfseries 向后欧拉}形式如下：
+$$u_{n+1}=u_{n}+h f\left(u_{n+1}, t_{n+1}\right)$$
+$\text{初始条件：}u(t_0)=u_0$
+
+\subsection{推导过程}
+对于常微分方程：$$\frac{du}{dx}=f(x,u)$$
+$$u(x_0)=u_0$$
+
+离散变量，用差商近似代替导数：
+$$\frac{du}{dx} \approx \frac{u(x_{i+1})-u(x_{i})}{\delta x} \qquad x_i\text{为任意一点,\qquad}(i=0,1,2,...)$$
+
+于是有$$u(x_{i+1})=u(x_{i})+\delta x *f(x_i,u(x_i))$$
+
+
+\begin{table}  
+	%\caption{设置表格总长}  
+	\begin{tabular*}{16cm}{ll}  
+		\hline  
+		Python代码 \\  
+		\hline  
+		&import numpy as np\\
+		&import matplotlib.pyplot as plt\\	
+		&N=10000\\
+		&x=np.linspace(0,1,N+1)\\
+		&u=np.zeros(N+1)\\
+		&u[0]=1\\
+		&uexact=np.exp(x)\\
+		&step=1/N\\
+		
+		&def eular(x,u):\\
+		&\qquad return u\\
+		
+		&for i in range(0,N):\\
+		&\qquad[i+1] = u[i] + eular(x[i],u[i])*step\\
+		
+		&plt.plot(x,u-uexact)\\
+		\hline  
+	\end{tabular*}  
+\end{table} 
+
+
+\begin{figure}[ht]
+结果图像如下：\\
+	\centering
+	\includegraphics[scale=0.6]{./figures/Figure_6.png}
+	\caption{this is the error}
+	\label{fig:label}
+\end{figure}
+
+\newpage
+\section{B样条插值}
+\subsection{德布尔-考克斯递推公式}
+B样条有多种等价定义，这里用到的是德布尔-考克斯递推公式，
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.6]{./figures/Figure_7.png}
+	\caption{ }
+	\label{fig:label}
+\end{figure}
+
+$N_{i,k}(u)$表示k次样条基函数，下标i表示序号。
+
+易知要确定第i个k次B样条$N_{i,k}(u)$,需要用到$u_i,u_{i+1},...,u_{i+k+1}$共$k+2$个节点。称$[u_i,u_{n+k+1}]为N_{i,k}(u)$的支撑区间
+
+
+对于曲线方程中相应的$n+1$个控制顶点$d_i(i=0,1,2,...,n)$,需要用到$n+1$个k次B样条基函数，所需要的支撑区间所含节点为这组B样条基的节点矢量$U=[u_0,u_1,...,u_{n+k+1}]$
+
+下面介绍一个案例的不同控制点的图像
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.6]{./figures/16.png}
+	\caption{用16个控制点的得到的B样条函数图像}
+	\label{fig:label}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.6]{./figures/80.png}
+	\caption{用80个控制点的得到的B样条函数图像}
+	\label{fig:label}
+\end{figure}
+
+
+\end{document}

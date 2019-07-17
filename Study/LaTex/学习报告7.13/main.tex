@@ -1,0 +1,77 @@
+% !Mode:: "TeX:UTF-8"
+\documentclass[12pt,a4paper]{article}
+\input{en_preamble.tex}
+\input{xecjk_preamble.tex}
+
+\title{学习报告}
+\author{作者：周铁军}
+\date{\chntoday}
+\begin{document}
+\maketitle
+\newpage
+
+
+\section{均匀B-Spline曲线}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.6]{./figures/1.png}
+	\caption{}
+	\label{fig:label}	
+\end{figure}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.6]{./figures/2.png}
+	\caption{}
+	\label{fig:label}	
+\end{figure}
+
+\subsection{问题一}
+我们注意到图1和图2的区别在于，（1,1）与（2,2）之间多了一条连线。
+
+经过多番考虑和实验分析，应该只是我连接控制点时多画了而已。
+
+首先,三次均匀B样条曲线的矩阵形式表达如下：
+
+$$
+\mathrm{p}(\mathrm{u})=\left(\begin{array}{cccc}{\mathrm{d}_{0}} & {\mathrm{d}_{1}} & {\ldots} & {\mathrm{d}_{\mathrm{n}}}\end{array}\right)\left(\begin{array}{c}{\mathrm{N}_{0, \mathrm{3}}(\mathrm{u})} \\ {\mathrm{N}_{1, \mathrm{3}}(\mathrm{u})} \\ {\vdots} \\ {\mathrm{N}_{\mathrm{n}, \mathrm{3}}(\mathrm{u})}\end{array}\right)
+$$
+
+只需要确定控制顶点$d_i$、曲线的次数k以及基函数$N_{i,k}(u)$，就完全确定了曲线。
+
+所以，B样条曲线是受控制点的影响，关于图中控制点的连线，只是为了可视化更清楚而已。
+
+下面是不对控制点连线的图像：
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.4]{./figures/noline.png}
+	\caption{不对控制点连线图}
+	\label{fig:label}	
+\end{figure}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.4]{./figures/nolineb.png}
+	\caption{不对控制点连线放大图}
+	\label{fig:label}	
+\end{figure}
+
+\newpage
+对于我这么问题，首先内外两个控制点围成的矩形区域(后面简称矩形区域)，不妨暂且先看做两组控制点$P=[d_1,d_2,...,d_p]$、$Q=[d'_1,d'_2,...,d'_q]$,
+
+因为我要求的B样条曲线应该是两组控制点共同约束得到的曲线，
+曲线表达式应该为：
+$$
+\mathrm{p}(\mathrm{u})=\left(\begin{array}{cc}{P} & {Q}\end{array}\right)\left(\begin{array}{c}{\mathrm{N}_{0, \mathrm{3}}(\mathrm{u})} \\ {\mathrm{N}_{1, \mathrm{3}}(\mathrm{u})} \\ {\vdots} \\ {\mathrm{N}_{\mathrm{n}, \mathrm{3}}(\mathrm{u})}\end{array}\right)
+$$
+
+故我们计算时，应该是把控制点看成一组点。
+
+
+相反，如果分成两组点计算，则我们得到的结果是两个矩形区域分别约束得到的B-Spline曲线，只不过同框罢了。
+
+和单独计算两次矩形约束区域无异。
+
+{\bfseries 以上是我对于求均匀B-Spline曲线时遇到的问题的分析及依据，如果有考虑不充分的地方还请老师雅正。}
+     
+     
+
+\end{document}

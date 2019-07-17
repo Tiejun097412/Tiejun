@@ -1,0 +1,94 @@
+% !Mode:: "TeX:UTF-8"
+\documentclass[12pt,a4paper]{article}
+\input{en_preamble.tex}
+\input{xecjk_preamble.tex}
+
+\title{梯度下降法}
+\author{作者：周铁军}
+\date{\chntoday}
+\begin{document}
+\maketitle
+\newpage
+\subsection{描述}
+梯度下降法基于以下的观察：如果实值函数$F(x)$在点a处可微且有定义，那么函数$F(x)$
+在a点沿着梯度相反的方向$-\nabla F(a)$下降最快。
+
+因而，如果
+\begin{equation}
+	b=a-\gamma\nabla F(a)
+\end{equation}
+对于$\gamma>0$为一个够小数值时成立，那么$F(a)\ge F(b)$。
+
+考虑到这一点，我们可以从函数F的局部极小值的初始估计$x_0$出发，并考虑如下序列
+$x_0,x_1,x_2,...$使得
+\begin{equation}
+	x_{n+1}=x_n-\gamma_n \nabla F(x_n),n \ge 0。
+\end{equation}
+因此可得到
+\begin{equation}
+	F(x_0) \ge F(x_1) \ge F(x_2) \ge ...,
+\end{equation}
+如果顺利的话序列$(x_n)$收敛到期望的极值。注意每次迭代步长$\gamma$
+可以改变。
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./figures/Figure_2.png}
+\end{figure}
+上图示例了这一过程，这里假设F定义在平面上，并且函数图像是一个碗形。蓝色的曲线是等高线（水平集），即函数 F为常数的集合构成的曲线。红色的箭头指向该点梯度的反方向。（一点处的梯度方向与通过该点的等高线垂直）。沿着梯度下降方向，将最终到达碗底，即函数 F值最小的点。
+
+\subsection{例子}
+梯度下降法处理一些复杂的非线性函数会出现问题，例如Rosenbrock函数
+\begin{equation}
+	f(x,y)=(1-x)^2+100(y-x^2)^2
+\end{equation}
+其最小值在（x,y)=(1,1)处，数值为f(x,y)=0.但是此函数具有狭窄弯的山谷，最小值 (x,y)=(1,1)就在这些山谷之中，并且谷底很平。优化过程是之字形的向极小值点靠近，速度非常缓慢。
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{./figures/Figure_3.png}
+\end{figure}
+下面这个例子也鲜明的示例了"之字"的上升（非下降），这个例子用梯度上升（非梯度下降）法求$ F(x,y)=\sin \left({\frac  {1}{2}}x^{2}-{\frac  {1}{4}}y^{2}+3\right)\cos(2x+1-e^{y})$的极大值（非极小值，实际是局部极大值）。
+
+
+\begin{figure}[ht]
+\begin{minipage}[t]{0.4\linewidth}%并排放两张图片，每张占行的0.4，下同 
+\centering     %插入的图片居中表示
+\includegraphics[width=1.2\textwidth]{./figures/Figure_4.png}
+\caption{this is a figure4.}%图片的名称
+\label{fig:liuchengtu1}%标签，用作
+\end{minipage} 
+\hfill
+\begin{minipage}[t]{0.4\linewidth}
+\centering
+\includegraphics[width=1.2\textwidth]{./figures/Figure_5.png}
+\caption{this is a figure5.}%图片的名称
+\label{fig:liuchengtu2}
+\end{minipage}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\cite{tam19912d}
+\bibliography{ref}
+\end{document}
