@@ -1,2 +1,2 @@
 # tiejun
-Studing
+Studying
