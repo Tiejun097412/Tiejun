@@ -9,7 +9,7 @@ if k == 0       % 0次B样条
         Nik_u = 0.0;
     end
 else
-    Length1 = NodeVector(i+k+1) - NodeVector(i+1);
+    Length1 = NodeVector(i+k+1) - NodeVector(i+1);      
     Length2 = NodeVector(i+k+2) - NodeVector(i+2);      % 支撑区间的长度
     if Length1 == 0.0       % 规定0/0 = 0
         Length1 = 1.0;

@@ -17,41 +17,40 @@ flag = 1;
 
 switch flag
     case 1
-        NodeVector = linspace(0, 1, n+k+2); % 均匀B样条的节点矢量     
+        NodeVector1 = linspace(0, 1, n+k+2); % 均匀B样条的节点矢量
+        NodeVector2 = linspace(0, 1, m+k+2); % 均匀B样条的节点矢量
     plot(P(1, 1:n+1), P(2, 1:n+1),...
-                        'o','LineWidth',1,...
+                        '.','LineWidth',1,...
                         'MarkerEdgeColor','k',...
                         'MarkerFaceColor','g',...
                         'MarkerSize',6);
     plot(Q(1, 1:m+1), Q(2, 1:m+1),...
-                        'o','LineWidth',1,...
+                        '.','LineWidth',1,...
                         'MarkerEdgeColor','k',...
                         'MarkerFaceColor','g',...
                         'MarkerSize',6);
     %line(P(1,1:121), P(2,1:121))
-    %line(P(1,122:n+1),P(2,122:n+1))   
+    %line(P(1,122:n+1),P(2,122:n+1)) 
+    %%关于大矩形
         Nik = zeros(n+1, 1);
-        for u = k/(n+k+1) : 0.001 : (n+1)/(n+k+1)
+        for u = k/(n+k+1) : 0.001 : (n+1)/(n+k+1)%为了只在定义域中计算
         %for u = 0 : 0.005 : 1
             for i = 0 : 1 : n
-                Nik(i+1, 1) = BaseFunction(i, k , u, NodeVector);
+                Nik(i+1, 1) = BaseFunction(i, k , u, NodeVector1);
             end
         p_u = P * Nik;
-        
         line(p_u(1,1), p_u(2,1), 'Marker','.','LineStyle','-', 'Color',[.3 .6 .9]);
         end
+        
       Mik = zeros(m+1, 1);
-        for u = k/(m+k+1) : 0.001 : (m+1)/(m+k+1)
+        for u = k/(m+k+2) : 0.001 : (m+1)/(m+k+1)
         %for u = 0 : 0.005 : 1
             for i = 0 : 1 : m
-                Mik(i+1, 1) = BaseFunction(i, k , u, NodeVector);
+                Mik(i+1, 1) = BaseFunction(i, k , u, NodeVector2);
             end
         q_u = Q * Mik;
-        
         line(q_u(1,1),q_u(2,1), 'Marker','.','LineStyle','-', 'Color',[.3 .6 .9]);
         end  
-        
-        
     case 2
         NodeVector = U_quasi_uniform(n, k); % 准均匀B样条的节点矢量
         DrawSpline(n, k, P, NodeVector);
