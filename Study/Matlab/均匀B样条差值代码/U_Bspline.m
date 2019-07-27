@@ -1,9 +1,9 @@
-% P =[1,1,1,2,2,3,3,2,1;
-%     1,2,3,3,2,2,1,1,1];
 
-P=[ones(1,31),linspace(1.1,4,30),4*ones(1,30),fliplr(linspace(1,3.9,30)),1,1;
- linspace(1,4,31),4*ones(1,30),fliplr(linspace(1,3.9,30)),ones(1,30),1.2,1.4];
-m = 123;
+
+ P=[ones(1,31),linspace(1.1,4,30),4*ones(1,30),fliplr(linspace(1,3.9,30)),1,1;
+  linspace(1,4,31),4*ones(1,30),fliplr(linspace(1,3.9,30)),ones(1,30),1.2,1.4];
+
+m = 41;
 k=3;
 plot(P(1,1:m), P(2,1:m),...
                         'o','LineWidth',1,...
