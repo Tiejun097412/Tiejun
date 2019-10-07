@@ -1,0 +1,55 @@
+% !Mode:: "TeX:UTF-8"
+\documentclass[12pt,a4paper]{article}
+\input{en_preamble.tex}
+\input{xecjk_preamble.tex}
+
+\title{学习报告}
+\author{作者：周铁军}
+\date{\chntoday}
+\begin{document}
+\maketitle
+\newpage
+
+
+\section{均匀B-Spline曲线}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.6]{./figures/1.png}
+	\caption{}
+	\label{fig:label}	
+\end{figure}
+
+关于如何获取其余控制顶点。
+
+我现在已经想了一个算法，并且理论上是可行。
+
+只需要给出“转角处的控制顶点”的坐标和“步长”，即可获得全部的控制顶点。
+
+如图，
+
+转角处的控制顶点$P=[d_1,d_2,...d_m]$
+
+步长$\delta$
+     
+现在我的难点在于：
+
+1.如何储存获取的控制顶点
+由于不同的段长度不一，如$d_1 - d_2$段 与$d_2-d_3$段，那么得到的控制顶点的数量也不一样。
+
+比如我给出一组转角处顶点坐标：
+$Q=[d_1,d_2,...d_n] =[x_1,x_2,...,x_n; y_1,y_2,...,y_n]$
+
+然后计算得到全部控制顶点的坐标：
+
+$d_1 - d_2$间有：
+
+$$[x^{(1)}_1,x{(1)}_2,...,x^{(1)}_{m_1}; y^{(1)}_1,y^{(1)}_2,...,y^{(1)}_{m_1}]$$
+
+...
+
+$d_i - d_{i+1}$间有
+$$[x^{(i)}_1,x^{(i)}_2,...,x^{(i)}_{m_i}; y^{(i)}_1,y^{(i)}_2,...,y^{(i)}_{m_i}]$$
+
+然后我需要把这些大小不一的二维向量整合成一个，才能用于计算。
+
+\end{document}

@@ -1,0 +1,250 @@
+% !Mode:: "TeX:UTF-8"
+\documentclass[12pt,a4paper]{article}
+\input{en_preamble.tex}
+\input{xecjk_preamble.tex}
+
+\title{求解抛物方程1.2}
+\author{作者：周铁军}
+\date{\chntoday}
+\begin{document}
+\maketitle
+\newpage
+\section{抛物方程}
+ 题目：
+ 
+ \begin{equation}
+  \begin{array}{l}{ u_t = \alpha(u_{xx}+u_{yy})+f(x,t) \qquad (x,y) \in G=(0,1)\times(0,1),t > 0}\\
+  {u(0,y,t) = u(1,y,t)=0,\qquad y \in [0,1],t \geq 0 }\\
+  {u(x,0,t) = u(x,1,t)=0,\qquad x \in [0,1],t \geq 0}\\
+  {u(x,y,0)=0,\qquad (x,y) \in [0,1] \times [0,1]}\end{array}
+ \end{equation}
+其中$f(x,y,t) = sin{5 \pi t}sin{2 \pi x}sin{\pi y},\alpha = 1$,网格步长$h_1 = h_2 = 0.1,0.05,\tau =0.01$.计算$u$在$t=0.1,0.2,0.4,0.8$的近似值。
+
+\section{ADI法求解}
+首先，对进行网格剖分，其中$h_1$和$h_2$分别为区间$[0,1]\times[0,1]$上的剖分步长。
+
+其次，利用五点差分离散二阶空间导数$\frac{\partial^2 u}{\partial x^2}$和$\frac{\partial^2 u}{\partial y^2}$,得到：
+\begin{equation}
+\begin{array}{l}{\frac{\partial^2 u}{\partial x^2} = \frac{u_{i+1,j}+u_{i-1,j}-2u_{i,j}}{h_1^2} + O(h_1^2)}\\
+{\frac{\partial^2 u}{\partial y^2} = \frac{u_{i,j+1}+u_{i,j-1}-2u_{i,j}}{h_2^2}+ O(h_2^2)}\end{array}
+\end{equation}
+利用向前差分离散一阶时间导数$\frac{\partial u}{\partial t}$,得到：
+\begin{equation}
+\begin{array}{l}{\frac{\partial u}{\partial t} = \frac{u^{n+1}_{i,j}-u^n_{i,j}}{\tau} + O(\tau)}\end{array}
+\end{equation}
+其中$i,j=0,1,...,n$,于是方程可表示为：
+$$\frac{u^{n+\frac{1}{2}}_{i,j}-u^n_{i,j}}{\frac{\tau}{2}}=\frac{u^{n+\frac{1}{2}}_{i+1,j}+u^{n+\frac{1}{2}}_{i-1,j}-2u^{n+\frac{1}{2}}_{i,j}}{h^2}+\frac{u^n_{i,j+1}+u^n_{i,j-1}-2u^n_{i,j}}{h^2} + f^n(x(i),y(j)),$$
+
+$$\frac{u^{n+1}_{i,j}-u^{n+\frac{1}{2}}_{i,j}}{\frac{\tau}{2}}=\frac{u^{n+\frac{1}{2}}_{i+1,j}+u^{n+\frac{1}{2}}_{i-1,j}-2u^{n+\frac{1}{2}}_{i,j}}{h^2}+\frac{u^{n+1}_{i,j+1}+u^{n+1}_{i,j-1}-2u^{n+1}_{i,j}}{h^2} + f^n(x(i),y(j)),$$
+
+化简得：
+$$-\frac{\tau}{2h^2}(u^{n+\frac{1}{2}}_{i+1,j}+u^{n+\frac{1}{2}}_{i-1,j})+(1+\frac{\tau}{h^2})u^{n+\frac{1}{2}}_{i,j} = \frac{\tau}{2h^2}(u^n_{i,j+1}+u^n_{i,j-1})+(1-\frac{\tau}{h^2})2u^n_{i,j} + \frac{\tau}{2}f^n(x(i),y(j)),$$
+
+$$-\frac{\tau}{2h^2}(u^{n+1}_{i,j+1}+u^{n+1}_{i,j-1})+(1+\frac{\tau}{h^2})u^{n+1}_{i,j} =\frac{\tau}{2h^2}(u^{n+\frac{1}{2}}_{i+1,j}+u^{n+\frac{1}{2}}_{i-1,j})+(1-\frac{\tau}{h^2})u^{n+\frac{1}{2}}_{i,j}+\frac{\tau}{2} f^n(x(i),y(j)),$$
+
+考虑边值条件，有：
+\begin{equation}
+\begin{array}{l}{u(x(0),y,t) = u(x(n),y,t)=0}\\
+{u(x,y(0),t) = u(x,y(n),t)=0}\end{array}
+\end{equation}
+\newpage
+则只需求解红色区域内的点(见图1)：
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.4]{./figures/zuobiao.png}
+	\caption{网格剖分}
+	\label{fig:label}	
+\end{figure}
+
+
+令$U^k = (u^k_{11},u^k_{12},...,u^k_{1,n-1},u^k_{21},u^k_{22},...,u^k_{2,n-1},...)^{T} \quad (U^k\text{为}(n-1)^2 \times 1 \text{向量})$
+
+$F^k = (f^k_{11},f^k_{12},...,f^k_{1,n-1},f^k_{21},f^k_{22},...,f^k_{2,n-1},...)^{T} \quad (F^k\text{为}(n-1)^2 \times 1\text{向量},f^k_{i,j}=f(x(i),y(j),t(k)) = sin{5 \pi t_k}sin{2 \pi x_i}sin{\pi y_j})$,
+
+系数矩阵：
+
+\begin{equation}
+A_1 = \left[                 
+\begin{array}{cccc}
+B_1& C &\cdots  & 0\\
+C& B_1 &\cdots& 0\\
+\vdots  & \vdots & \ddots & \vdots \\
+0& 0 &\cdots  &B_1
+\end{array}
+\right ]_{(n-1)^2 \times (n-1)^2},
+\end{equation}
+其中，
+\begin{equation}
+ B_1 =(1+\frac{\tau}{h^2}) I_{n-1}  ,\quad C = -\frac{\tau}{2h^2} I_{n-1}
+\end{equation}
+\newpage
+\begin{equation}
+A_2 = \left[                 
+\begin{array}{cccc}
+B_2& 0 &\cdots  & 0\\
+0& B_2 &\cdots& 0\\
+\vdots  & \vdots & \ddots & \vdots \\
+0& 0 &\cdots  &B_2
+\end{array}
+\right ]_{(n-1)^2 \times (n-1)^2},\quad
+B_2 = \left[                 
+\begin{array}{cccc}
+1-\frac{\tau}{h^2}& \frac{\tau}{2h^2} &\cdots  & 0\\
+\frac{\tau}{2h^2}& 1-\frac{\tau}{h^2} &\cdots& 0\\
+\vdots  & \vdots & \ddots & \vdots \\
+0& 0 &\cdots  &1-\frac{\tau}{h^2}
+\end{array}
+\right ]_{(n-1) \times (n-1)}
+\end{equation}
+
+\begin{equation}
+A_3 = \left[                 
+\begin{array}{cccc}
+B_3& 0 &\cdots  & 0\\
+0& B_3 &\cdots& 0\\
+\vdots  & \vdots & \ddots & \vdots \\
+0& 0 &\cdots  &B_3
+\end{array}
+\right ]_{(n-1)^2 \times (n-1)^2},\quad
+B_3 = \left[                 
+\begin{array}{cccc}
+1+\frac{\tau}{h^2}& -\frac{\tau}{2h^2} &\cdots  & 0\\
+-\frac{\tau}{2h^2}& 1+\frac{\tau}{h^2} &\cdots& 0\\
+\vdots  & \vdots & \ddots & \vdots \\
+0& 0 &\cdots  &1+\frac{\tau}{h^2}
+\end{array}
+\right ]_{(n-1) \times (n-1)}
+\end{equation}
+
+
+\begin{equation}
+A_4 = \left[                 
+\begin{array}{cccc}
+B_4& -C &\cdots  & 0\\
+-C& B_4 &\cdots& 0\\
+\vdots  & \vdots & \ddots & \vdots \\
+0& 0 &\cdots  &B_4
+\end{array}
+\right ]_{(n-1)^2 \times (n-1)^2},\quad
+B_4 =(1-\frac{\tau}{h^2}) I_{n-1}  
+\end{equation}
+
+于是得到如下迭代格式：
+$$A_1 U^{n+\frac{1}{2}} = A_2 U^{n} + \frac{\tau}{2} f^n(x(i),y(j)) $$
+
+$$A_3 U^{n+1} = A_4 U^{n+\frac{1}{2}} + \frac{\tau}{2} f^{n+\frac{1}{2}}(x(i),y(j)) $$
+\section{求解结果}
+不妨令$tmax = 1$,则$t \in [0,tmax]$,
+
+Part I：$h_1 = h_2 = 0.05$不同时刻的u的近似值的图像。
+
+\begin{figure}[ht]
+	\begin{minipage}[t]{0.4\linewidth}%并排放两张图片，每张占行的0.4，下同 
+		\centering     %插入的图片居中表示
+		\includegraphics[width=1.2\textwidth]{./figures/time01.png}
+		\caption{0.1时刻的u的近似解.}%图片的名称
+		\label{fig:liuchengtu1}%标签，用作
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=1.2\textwidth]{./figures/time02.png}
+		\caption{0.2时刻的u的近似解.}%图片的名称
+		\label{fig:liuchengtu2}
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{minipage}[t]{0.4\linewidth}%并排放两张图片，每张占行的0.4，下同 
+		\centering     %插入的图片居中表示
+		\includegraphics[width=1.2\textwidth]{./figures/time04.png}
+		\caption{0.4时刻的u的近似解.}%图片的名称
+		\label{fig:liuchengtu1}%标签，用作
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=1.2\textwidth]{./figures/time08.png}
+		\caption{0.8时刻的u的近似解.}%图片的名称
+		\label{fig:liuchengtu2}
+	\end{minipage}
+\end{figure}
+\newpage
+Part II：$h_1 = h_2 = 0.1$不同时刻的u的近似值的图像。
+\begin{figure}[ht]
+	\begin{minipage}[t]{0.4\linewidth}%并排放两张图片，每张占行的0.4，下同 
+		\centering     %插入的图片居中表示
+		\includegraphics[width=1.2\textwidth]{./figures/TIME01.png}
+		\caption{0.1时刻的u的近似解.}%图片的名称
+		\label{fig:liuchengtu1}%标签，用作
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=1.2\textwidth]{./figures/TIME02.png}
+		\caption{0.2时刻的u的近似解.}%图片的名称
+		\label{fig:liuchengtu2}
+	\end{minipage}
+\end{figure}
+\begin{figure}[ht]
+	\begin{minipage}[t]{0.4\linewidth}%并排放两张图片，每张占行的0.4，下同 
+		\centering     %插入的图片居中表示
+		\includegraphics[width=1.2\textwidth]{./figures/TIME04.png}
+		\caption{0.4时刻的u的近似解.}%图片的名称
+		\label{fig:liuchengtu1}%标签，用作
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[t]{0.4\linewidth}
+		\centering
+		\includegraphics[width=1.2\textwidth]{./figures/TIME08.png}
+		\caption{0.8时刻的u的近似解.}%图片的名称
+		\label{fig:liuchengtu2}
+	\end{minipage}
+\end{figure}
+\newpage
+以上为$u$在$t=0.1,0.2,0.4,0.8$的近似值。
+
+这一次可以看到，随着迭代次数的不断增加，函数近似值的图像最终区域稳定。
+\newpage
+\section{误差分析}
+我们选取如下节点的近似解来分析误差
+\begin{equation}
+\left[                 
+\begin{array}{cccc}
+(0.2,0.2)& (0.4,0.2) &\cdots  & (0.8,0.2)\\
+(0.2,0.4)& (0.4,0.4) &\cdots& (0.8,0.4)\\
+\vdots  & \vdots & \ddots & \vdots \\
+(0.2,0.8)& (0.4,0.8) &\cdots  &(0.8,0.8)
+\end{array}
+\right]
+\end{equation}
+
+如图，"$\times$"表示的位置
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.1]{./figures/jiedian.jpg}
+	\caption{节点坐标}
+	\label{fig:label}	
+\end{figure}
+
+作如下四种剖分，剖分步长h = 0.2,0.1,0.05,0.025;
+
+并将剖分最密者(即 h = 0.025)看作精确解。
+
+得到如下误差
+\begin{table*}
+	\centering  
+	\caption{误差分析}  
+	\begin{tabular*}{12cm}{lllll}  
+		\hline  
+		h & max范数  & $L_2$范数 &max的阶& $L_2$的阶\\  
+		\hline  
+		0.2  & 1.5467e-4 & 4.2750e-4 & 2.1711 & 2.1711\\  
+		0.1  & 3.4344e-5 & 9.4925e-5 & 2.3470 & 2.3470\\
+		0.05  & 6.7503e-6 & 1.8657e-5& \ & \ \\
+		0.025  &   &看作精确解   & & \\  
+		\hline  
+	\end{tabular*}  
+\end{table*}
+
+\end{document}

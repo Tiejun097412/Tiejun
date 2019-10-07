@@ -1,0 +1,137 @@
+% !Mode:: "TeX:UTF-8"
+\documentclass[12pt,a4paper]{article}
+\input{en_preamble.tex}
+\input{xecjk_preamble.tex}
+
+\title{五点差分求解possion方程}
+\author{作者：周铁军}
+\date{\chntoday}
+\begin{document}
+\maketitle
+\newpage
+\section{五点差分}
+ 题目：用差分法求解边值问题
+ 
+ \begin{equation}
+  \begin{array}{l}{-\Delta u = cos{3x}sin{\pi y} \qquad (x,y) \in G=(0,\pi)\times(0,1),}\\
+  {u(x,0) = u(x,1)=0,\quad 0 \leq x \leq 1, }\\
+  {u_x(0,y) = u_x(\pi,y)=0,\quad 0 \leq y \leq 1, }\end{array}
+ \end{equation}
+其中精确解为：$u = (9+\pi^2)^{-1}cos{3x}sin{\pi y}$
+
+(1) 依次取 $N = 4,8,16,32$，取 $6$ 位小数计算，以步长$h_1 = \frac{\pi}{N}$和$\frac{1}{N}$作矩形剖分,就$(x_i,y_j)=(\frac{i\pi}{4},\frac{j}{4}),i,j=1,2,3$处列出差分解与精确解.
+
+(2) 计算出差分法的误差阶.
+
+\subsection{求解}
+首先，对进行网格剖分，其中$h_1$和$h_2$分别为区间$[0,\pi]$和$[0,1]$上的剖分步长。
+
+其次，利用五点差分离散二阶导数$\frac{\partial^2 u}{\partial x^2}$和$\frac{\partial^2 u}{\partial y^2}$,得到：
+\begin{equation}
+\begin{array}{l}{\frac{\partial^2 u}{\partial x^2} = \frac{u_{i+1,j}+u_{i-1,j}-2u_{i,j}}{h_1^2} + O(h_1^2)}\\
+{\frac{\partial^2 u}{\partial y^2} = \frac{u_{i,j+1}+u_{i,j-1}-2u_{i,j}}{h_2^2}+ O(h_2^2)}\end{array}
+\end{equation}
+其中$i,j=0,1,...,n$,于是方程可表示为：
+$$-\frac{u_{i+1,j}+u_{i-1,j}-2u_{i,j}}{h_1^2}-\frac{u_{i,j+1}+u_{i,j-1}-2u_{i,j}}{h_2^2} = cos{3x_i}sin{\pi y_j},\quad i,j=0,1,...,n$$
+
+化简得：
+$$(\frac{2}{h_1^2}+\frac{2}{h_2^2})u_{i,j}-\frac{1}{h_1^2}(u_{i+1,j}+u_{i-1,j})-\frac{1}{h_2^2}(u_{i,j+1}+u_{i,j-1}) = cos{3x_i}sin{\pi y_j},\quad i,j=0,1,...,n$$
+
+
+考虑边界条件，有：
+\begin{equation}
+\begin{array}{l}{u(x,y(0)) = u(x,y(n))=0}\\
+{u(x(0),y) = u(x(1),y),u(x(n-1),y) = u(x(n),y)}\end{array}
+\end{equation}
+\newpage 
+则只需求解红色区域内的点(见图1)：
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.4]{./figures/zuobiao.png}
+	\caption{网格剖分}
+	\label{fig:label}	
+\end{figure}
+
+
+
+化为矩阵形式：
+$$AU = F$$
+
+其中$U = (u_{11},u_{12},...,u_{1,n-1},u_{21},u_{22},...,u_{2,n-1},...)^{T} \quad (U\text{为}(n-1)^2 \times 1 \text{向量})$
+
+$F = (f_{11},f_{12},...,f_{1,n-1},f_{21},f_{22},...,f_{2,n-1},...)^{T} \quad (f(x,y)=cos{3x}sin{\pi y})$
+
+\begin{equation}
+A = \left[                 
+\begin{array}{cccc}
+B_1& C &\cdots  & 0\\
+C& B_2 &\cdots& 0\\
+\vdots  & \vdots & \ddots & \vdots \\
+0& 0 &\cdots  &B_1
+\end{array}
+\right ]_{(n-1)^2 \times (n-1)^2},\quad B_1 = \left[                 
+\begin{array}{cccc}
+\frac{1}{h_1^2}+\frac{2}{h_2^2}& -\frac{1}{h_2^2} &\cdots  & 0\\
+-\frac{1}{h_2^2}& \frac{1}{h_1^2}+\frac{2}{h_2^2} &\cdots& 0\\
+\vdots  & \vdots & \ddots & \vdots \\
+0& 0 &\cdots  &\frac{1}{h_1^2}+\frac{2}{h_2^2}
+\end{array}
+\right ]_{(n-1) \times (n-1)} ,
+\end{equation}
+
+\begin{equation}
+ B_2 = \left[                 
+\begin{array}{cccc}
+\frac{2}{h_1^2}+\frac{2}{h_2^2}& -\frac{1}{h_2^2} &\cdots  & 0\\
+-\frac{1}{h_2^2}& \frac{2}{h_1^2}+\frac{2}{h_2^2} &\cdots& 0\\
+\vdots  & \vdots & \ddots & \vdots \\
+0& 0 &\cdots  &\frac{2}{h_1^2}+\frac{2}{h_2^2}
+\end{array}
+\right ]_{(n-1) \times (n-1)} ,\quad C = -\frac{1}{h_1^2} I_{n-1}
+\end{equation}
+
+\subsection{结果}
+下面展示$N = 4$时，$(x_i,y_j)=(\frac{i\pi}{4},\frac{j}{4}),i,j=1,2,3$处的差分解与精确解.
+\begin{equation}
+\text{差分解:}u = \left[                 
+\begin{array}{ccc}
+-0.042357& -0.059903 & -0.042357\\
+-7.598053\times 10^{-18}& -1.123532\times 10^{-17} & -8.021530 \times 10^{-18}\\
+0.042357& 0.059903 & 0.042357
+\end{array}
+\right ]
+\end{equation}
+
+\begin{equation}
+\text{精确解:}ue = \left[                 
+\begin{array}{ccc}
+-0.026498& -0.037473 & -0.026498\\
+-6.883738\times 10^{-18}& -9.735075\times 10^{-18} & -6.883738\times 10^{-18}\\
+0.026498& 0.037473 & 0.026498
+\end{array}
+\right ]
+\end{equation}
+\newpage
+其他剖分的解暂不列出，下面列出不同剖分下求得的误差范数。
+
+\begin{table*}
+	\centering  
+	\caption{误差分析}  
+	\begin{tabular*}{6cm}{lll}  
+		\hline  
+		N & max范数  & $L_2$范数 \\  
+		\hline  
+		4  & 0.0224 & 0.0449  \\  
+		8  & 0.0156 & 0.0509  \\
+		16  & 0.0229 & 0.1105 \\
+		32  & 0.0321 & 0.2681 \\  
+		\hline  
+	\end{tabular*}  
+\end{table*}
+
+\subsection{我的问题}
+通过数值求解，我得到的误差阶是一阶的，但是该问题本应该是二阶，
+
+还请老师，师姐指教，matlab代码见附件。
+
+\end{document}
