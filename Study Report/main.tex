@@ -1,0 +1,171 @@
+% !Mode:: "TeX:UTF-8"
+\documentclass[12pt,a4paper]{article}
+\input{en_preamble.tex}
+\input{xecjk_preamble.tex}
+
+\title{学习报表}
+\author{周铁军}
+\date{\chntoday}
+\begin{document}
+\maketitle
+\newpage
+
+
+\section{关于 github}
+
+\subsection{github 推送文件}
+
+1. git pull
+
+2. git add .
+
+3. git commit -m '本次上传注释'
+
+4. git pull
+
+5. git push
+
+\section{关于 Linux}
+
+\subsection{Linux 安装（以Ubuntu为例）}
+
+1. bios启动
+
+2. 
+
+3. Normal/minmal
+
+4. 选择 Sometime else
+
+5. 分配硬盘(以500G为例)
+
+\qquad (1). EFI (20G)
+
+\qquad (2). swap area (20G)
+
+\qquad (3). 根目录 （100G）
+
+\qquad (4). opt (100G)
+
+\qquad (5). home (surplus)
+
+\subsection{远程使用服务器}
+
+1. ssh wx@1722.16.47.186
+
+2. sshfs wx@172.16.47.186 : /home/wx/wx/\qquad /home/zhoutiejun/ztj
+
+\section{关于 Python}
+
+
+
+\section{关于 C语言}
+
+\subsection{gcc 与 g++}
+
+1. 创建： vi test.c
+
+2. 编译： 
+
+\qquad gcc test.c -o test
+
+\qquad g++ -o test test.c
+
+3. 运行：
+
+\qquad ./test
+
+
+\section{关于 Matlab}
+
+\subsection{Matlab安装}
+
+\subsubsection{卸载matlab}
+
+1. 删除 matlab/ 文件夹
+
+ \red{sudo rm /opt/matlab -r}
+
+2. 删除 matlab 图标
+
+ \red{sudo rm /usr/share/applications/matlab.desktop -r }
+
+\subsubsection{安装matlab R2017a}
+
+1. 创建挂载文件夹 /mnt/cdrom
+ 
+ \red{sudo mkdir /mnt/cdrom}
+
+2. 把　R2017b\_glnxa64\_dvd1.iso　挂载到 /mnt/cdrom 中
+ 
+ \red{sudo mount -o loop -t iso9660 ~/software/Matlab2017/R2017b\_Linux\_dvd1.iso /mnt/cdrom/}
+
+3. 创建安装文件夹 /opt/R2017b　, 并修改权限
+
+ \red{sudo mkdir /opt/R2017b}
+
+ \red{sudo chmod 777 /opt/R2017b}
+
+4. 安装　matlab
+ 
+ \red{sudo /mnt/cdrom/install}
+
+
+\textbf{安装向导所含详细步骤}
+
+1)安装开始，跳出欢迎对话框，选择install without using the internet 并点击next
+
+2)安装许可协议。选择yes，并点击next.
+
+3)输入安装码。
+
+点击选择"I have the file installtion key for the my license"，接着打开安装包，里面有个crack破解文件夹，打开install.txt文件，复制里面的安装码，09806-07443-53955-64350-21751-41297，粘贴，点击next
+
+4)选择所需安装组件，默认全选
+
+5)选择安装目录为原来我们建立的安装目录/opt/R2017b
+
+6)开始安装。
+
+7)安装到60%时出现对话框，提示　Eject DVD1 and isert DVD2 to continue
+
+8) 使用快捷键　ctrl+Alt+t　重新打开一个终端命令窗口，挂载 R2017b\_Linux\_dvd2.iso　到 /mnt/cdrom 中
+ 
+ \red{sudo mount -o loop -t iso9660 ~/software/Matlab2017/R2017b\_Linux\_dvd2.iso /mnt/cdrom/}
+
+9) 确认载成功后，直接点击ok,继续安装
+
+10) 安装完成
+
+5. 激活 matlab
+
+5.1 替换部分文件
+
+\red{sudo cp ~/software/Matlab2017/R2017b\_Linux\_Crack/* /opt/R2017b/bin/glnxa64/}
+
+5.2 进入/opt/R2017b/bin, 打开matlab
+ 
+ \red{cd /opt/R2017b/bin}
+ 
+ \red{sudo ./matlab}
+
+5.3 弹出激活对话框，选择用不联网的方法进行激活加，选择加载　~/software/Matlab/w@MMaR16b\_Lin64/crack/ 下的　license\_standalone.lic　文件
+
+5.4 激活完成
+
+6. 安装 matlab-support(需要联网)
+ 
+　\red{sudo apt-get install matlab-support}
+
+7. 启动 matlab
+
+  \red{sudo chmod -R a+rw ~/.matlab}
+  
+\subsection{Matlab使用}
+
+1. 给函数矩阵赋值： subs()
+
+2. kronecker 积： kron(A,B)
+
+\section{关于 Math}
+\end{document}
